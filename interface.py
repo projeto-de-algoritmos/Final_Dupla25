@@ -302,7 +302,16 @@ def traduz_transito(peso):
     else:
         resposta = str('Número errado')
         return resposta
-
+    
+def interval_scheduling(inicio, fim):
+    index = list(range(len(inicio)))
+    max_set = set()
+    prev_event_time = 0
+    for i in index:
+        if inicio[i] >= prev_event_time:
+            max_set.add(i)
+            prev_event_time = fim[i]
+    return max_set
 
 def mostra_estradas_inativas():
     if len(lista_estradas_inativas) == 0:
@@ -585,6 +594,54 @@ def visualiza_transito_ruim(x):
                               pady=5, fg='black', bg='#A8A8A8', border=5, command=fiscal)
         buttonVoltar.place(relx=0.5, rely=0.8, anchor=CENTER)
 
+def MyClick4(atual, dest):
+    text = Text(root, width=20, height=2, fg='black', bg='#E0FFFF', font=24)
+    text.place(relx=0.5, rely=0.55, anchor=CENTER)
+    texto = interval_scheduling(atual, dest)
+    text.insert(END, texto)
+
+def visualiza_cronograma(x):
+    global background
+    background.grid_forget()
+    background = Label(image=imag_1)
+    background.grid(row=1, column=0, columnspan=3)
+
+    text = Text(root, width=40, height=1, fg='white', bg='#228B22')
+    text.place(relx=0.5, rely=0.2, anchor=CENTER)
+    texto = 'Digite o número de tarefas:'
+    text.insert(END, texto)
+    qtd_ativ = Entry(root, width=26, fg='black', bg='White')
+    qtd_ativ.place(relx=0.5, rely=0.25, anchor=CENTER)
+    #qtd_ativ1 = qtd_ativ
+    #qtd_ativ1 = int(qtd_ativ1)
+
+    text = Text(root, width=41, height=1, fg='white', bg='#228B22')
+    text.place(relx=0.3, rely=0.3, anchor=CENTER)
+    texto = 'Digite o local de partida das atividades:'
+    text.insert(END, texto)
+    partida = Entry(root, width=20, fg='black', bg='White')
+    partida.place(relx=0.35, rely=0.35, anchor=CENTER)
+    #partida1 = partida.format(qtd_ativ1).split()
+    #partida1 = [int(begin) for begin in partida1]
+
+    text = Text(root, width=41, height=1, fg='white', bg='#228B22')
+    text.place(relx=0.7, rely=0.3, anchor=CENTER)
+    texto = 'Digite o local do destino das atividades:'
+    text.insert(END, texto)
+    destino = Entry(root, width=20, fg='black', bg='White')
+    destino.place(relx=0.65, rely=0.35, anchor=CENTER)
+    #destino1 = destino.format(qtd_ativ1).split()
+    #destino1 = [int(end) for end in destino1]
+
+    buttonConfirmar = Button(root, text='Criar', padx=30, pady=5, fg='black', bg='#A8A8A8',
+                             border=5, command=lambda: MyClick4(partida.get(), destino.get()))
+    buttonConfirmar.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+    if int(x) == 1:
+        buttonVoltar = Button(root, text='Voltar', padx=30,
+                              pady=5, fg='black', bg='#A8A8A8', border=5, command=caminhoneiro)
+        buttonVoltar.place(relx=0.5, rely=0.8, anchor=CENTER)
+
 
 def estradas_ativas_transito(x):
     global background
@@ -617,7 +674,7 @@ def estradas_ativas_transito(x):
     estrada2.place(relx=0.5, rely=0.76, anchor=CENTER)
 
     buttonConfirmar = Button(root, text='Confirmar', padx=30, pady=5,
-                             fg='black', bg='#A8A8A8', border=5, command=lambda: MyClick3(estrada1.get(), estrada2.get()))
+                             fg='black', bg='#A8A8A8', border=5, command=lambda: MyClick(estrada1.get(), estrada2.get()))
     buttonConfirmar.place(relx=0.5, rely=0.85, anchor=CENTER)
 
     buttonVoltar = Button(root, text='Voltar', padx=30, pady=5,
@@ -828,6 +885,10 @@ def caminhoneiro():
     buttonVisualizaTransitoRuim = Button(root, text='Consultar estradas com trânsito ruim', padx=30,
                                          pady=5, fg='black', bg='#A8A8A8', border=5, command=lambda: visualiza_transito_ruim(1))
     buttonVisualizaTransitoRuim.place(relx=0.5, rely=0.7, anchor=CENTER)
+
+    buttonVisualizaCronograma = Button(root, text='Consultar o cronograma de atividades', padx=30,
+                                         pady=5, fg='black', bg='#A8A8A8', border=5, command=lambda: visualiza_cronograma(1))
+    buttonVisualizaCronograma.place(relx=0.5, rely=0.8, anchor=CENTER)
 
     buttonVoltar = Button(root, text='Voltar', padx=30,
                           pady=5, fg='black', bg='#A8A8A8', border=5, command=menu)
