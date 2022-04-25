@@ -303,15 +303,23 @@ def traduz_transito(peso):
         resposta = str('Número errado')
         return resposta
     
-def interval_scheduling(inicio, fim):
+def interval_scheduling(inicio, fim, part, dest):
     index = list(range(len(inicio)))
     max_set = set()
     prev_event_time = 0
+    local_ini = []
+    local_fim = []
     for i in index:
         if inicio[i] >= prev_event_time:
             max_set.add(i)
+            local_ini.append(part[i] + ' as ' + str(inicio[i]) + 'h para ' + dest[i] + ' as ' + str(fim[i]) + 'h')
+            local_ini.append('\n')
+            #local_ini.append(part[i])
+            #local_fim.append(dest[i])
             prev_event_time = fim[i]
-    return max_set
+    #print(local_ini, local_fim)
+    #print(local_ini)
+    return local_ini
 
 def mostra_estradas_inativas():
     if len(lista_estradas_inativas) == 0:
@@ -594,16 +602,24 @@ def visualiza_transito_ruim(x):
                               pady=5, fg='black', bg='#A8A8A8', border=5, command=fiscal)
         buttonVoltar.place(relx=0.5, rely=0.8, anchor=CENTER)
 
-def MyClick4(atual, dest, qtd):
-    text = Text(root, width=20, height=2, fg='black', bg='#E0FFFF', font=24)
-    text.place(relx=0.5, rely=0.55, anchor=CENTER)
+def MyClick4(atual_horario, dest_horario, qtd, atual_local, dest_local):
+    text = Text(root, width=40, height=3, fg='black', bg='#E0FFFF', font=24)
+    text.place(relx=0.5, rely=0.65, anchor=CENTER)
     qtd = int(qtd)
-    atual = atual.format(qtd).split()
-    atual = [int(begin) for begin in atual]
+    atual_horario = atual_horario.format(qtd).split()
+    atual_horario = [int(begin) for begin in atual_horario]
 
-    dest = dest.format(qtd).split()
-    dest = [int(end) for end in dest]
-    texto = interval_scheduling(atual, dest)
+    dest_horario = dest_horario.format(qtd).split()
+    dest_horario = [int(end) for end in dest_horario]
+
+    atual_local = atual_local.format(qtd).split()
+    atual_local = [(begin) for begin in atual_local]
+
+    dest_local = dest_local.format(qtd).split()
+    dest_local = [(end) for end in dest_local]
+
+
+    texto = interval_scheduling(atual_horario, dest_horario, atual_local, dest_local)
     text.insert(END, texto)
 
 def conversorInteiro(x):
@@ -632,32 +648,46 @@ def visualiza_cronograma(x):
     #qtd_ativ1 = conversorInteiro(qtd_ativ)
     #qtd_ativ1 = int(qtd_ativ1)
 
-    text = Text(root, width=41, height=1, fg='white', bg='#228B22')
-    text.place(relx=0.3, rely=0.3, anchor=CENTER)
-    texto = 'Digite o local de partida das atividades:'
+    text = Text(root, width=54, height=2, fg='white', bg='#228B22')
+    text.place(relx=0.25, rely=0.3, anchor=CENTER)
+    texto = 'Digite os horarios do local de partida das atividades:\n   (Apenas horarios inteiros, exemplos: 1 4 14 23)'
     text.insert(END, texto)
-    partida = Entry(root, width=20, fg='black', bg='White')
-    partida.place(relx=0.35, rely=0.35, anchor=CENTER)
+    partida_horario = Entry(root, width=20, fg='black', bg='White')
+    partida_horario.place(relx=0.25, rely=0.35, anchor=CENTER)
     #partida1 = partida.format(qtd_ativ1).split()
     #partida1 = [int(begin) for begin in partida1]
 
-    text = Text(root, width=41, height=1, fg='white', bg='#228B22')
-    text.place(relx=0.7, rely=0.3, anchor=CENTER)
-    texto = 'Digite o local do destino das atividades:'
+    text = Text(root, width=54, height=2, fg='white', bg='#228B22')
+    text.place(relx=0.75, rely=0.3, anchor=CENTER)
+    texto = 'Digite os horarios do local do destino das atividades:\n   (Apenas horarios inteiros, exemplos: 5 9 17 24)'
     text.insert(END, texto)
-    destino = Entry(root, width=20, fg='black', bg='White')
-    destino.place(relx=0.65, rely=0.35, anchor=CENTER)
+    destino_horario = Entry(root, width=20, fg='black', bg='White')
+    destino_horario.place(relx=0.75, rely=0.35, anchor=CENTER)
     #destino1 = destino.format(qtd_ativ1).split()
     #destino1 = [int(end) for end in destino1]
 
+    text = Text(root, width=41, height=1, fg='white', bg='#228B22')
+    text.place(relx=0.25, rely=0.5, anchor=CENTER)
+    texto = 'Digite o local de partida das atividades:'
+    text.insert(END, texto)
+    partida_local = Entry(root, width=20, fg='black', bg='White')
+    partida_local.place(relx=0.25, rely=0.55, anchor=CENTER)
+
+    text = Text(root, width=41, height=1, fg='white', bg='#228B22')
+    text.place(relx=0.75, rely=0.5, anchor=CENTER)
+    texto = 'Digite o local do destino das atividades:'
+    text.insert(END, texto)
+    destino_local = Entry(root, width=20, fg='black', bg='White')
+    destino_local.place(relx=0.75, rely=0.55, anchor=CENTER)
+
     buttonConfirmar = Button(root, text='Criar', padx=30, pady=5, fg='black', bg='#A8A8A8',
-                             border=5, command=lambda: MyClick4(partida.get(), destino.get(), qtd_ativ.get()))
-    buttonConfirmar.place(relx=0.5, rely=0.5, anchor=CENTER)
+                             border=5, command=lambda: MyClick4(partida_horario.get(), destino_horario.get(), qtd_ativ.get() ,partida_local.get(), destino_local.get()))
+    buttonConfirmar.place(relx=0.5, rely=0.75, anchor=CENTER)
 
     if int(x) == 1:
         buttonVoltar = Button(root, text='Voltar', padx=30,
                               pady=5, fg='black', bg='#A8A8A8', border=5, command=caminhoneiro)
-        buttonVoltar.place(relx=0.5, rely=0.8, anchor=CENTER)
+        buttonVoltar.place(relx=0.5, rely=0.85, anchor=CENTER)
 
 
 def estradas_ativas_transito(x):
