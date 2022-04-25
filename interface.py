@@ -594,11 +594,28 @@ def visualiza_transito_ruim(x):
                               pady=5, fg='black', bg='#A8A8A8', border=5, command=fiscal)
         buttonVoltar.place(relx=0.5, rely=0.8, anchor=CENTER)
 
-def MyClick4(atual, dest):
+def MyClick4(atual, dest, qtd):
     text = Text(root, width=20, height=2, fg='black', bg='#E0FFFF', font=24)
     text.place(relx=0.5, rely=0.55, anchor=CENTER)
+    qtd = int(qtd)
+    atual = atual.format(qtd).split()
+    atual = [int(begin) for begin in atual]
+
+    dest = dest.format(qtd).split()
+    dest = [int(end) for end in dest]
     texto = interval_scheduling(atual, dest)
     text.insert(END, texto)
+
+def conversorInteiro(x):
+    fnum = []
+    newNum = ''
+    for i in x:
+        ii = int(i)
+        fnum.append(ii)
+    for i in fnum:
+        newNum = newNum + str(i)
+    new = int(newNum)
+    return new
 
 def visualiza_cronograma(x):
     global background
@@ -612,7 +629,7 @@ def visualiza_cronograma(x):
     text.insert(END, texto)
     qtd_ativ = Entry(root, width=26, fg='black', bg='White')
     qtd_ativ.place(relx=0.5, rely=0.25, anchor=CENTER)
-    #qtd_ativ1 = qtd_ativ
+    #qtd_ativ1 = conversorInteiro(qtd_ativ)
     #qtd_ativ1 = int(qtd_ativ1)
 
     text = Text(root, width=41, height=1, fg='white', bg='#228B22')
@@ -634,7 +651,7 @@ def visualiza_cronograma(x):
     #destino1 = [int(end) for end in destino1]
 
     buttonConfirmar = Button(root, text='Criar', padx=30, pady=5, fg='black', bg='#A8A8A8',
-                             border=5, command=lambda: MyClick4(partida.get(), destino.get()))
+                             border=5, command=lambda: MyClick4(partida.get(), destino.get(), qtd_ativ.get()))
     buttonConfirmar.place(relx=0.5, rely=0.5, anchor=CENTER)
 
     if int(x) == 1:
